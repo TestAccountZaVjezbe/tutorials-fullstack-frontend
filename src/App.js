@@ -1,28 +1,28 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment, incrementByAmount } from './redux/counter/counterSlice'
 import'./App.css';
 import { useState } from 'react';
+import { decrementCounter, incrementCounter, incrementByAmount } from './redux/counter/counterActions';
 
 function App() {
   const [input, setInput] = useState('');
   const counter = useSelector((state) => state.counter.value);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const increaseValue = () => {
-    dispatch(increment())
+    dispatch(incrementCounter())
   }
 
   const decreaseValue = () => {
-    dispatch(decrement())
+    dispatch(decrementCounter())
   }
 
   const onChangeValue = (event) => {
-    if(!Number(event.target.value)) return;
+    if(!Number(event.target.value) && !(Number(event.target.value) === 0)) return;
     setInput(event.target.value)
   }
 
   const increaseValueByAmount = () => {
-    dispatch(incrementByAmount(Number(input)))
+    dispatch(incrementByAmount(input))
   }
 
   return (
