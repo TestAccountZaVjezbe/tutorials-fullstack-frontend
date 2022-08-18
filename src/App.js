@@ -1,35 +1,32 @@
-import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment, incrementByAmount } from './redux/counter/counterSlice'
 import'./App.css';
+import { useState } from 'react';
 
 function App() {
-  const [counter, setCounter] = useState(0);
-  const [showError, setShowError] = useState(false);
-  const [counterArray, setCounterArray] = useState([]);
+  const [input, setInput] = useState('');
+  const counter = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch()
 
   const increaseValue = () => {
-    if(showError){
-      setShowError(false);
-    }
-    setCounter(counter+1);
-    const newArray = [...counterArray];
-    const findInArray = newArray.find(el => el === counter+1);
-    if(!findInArray) newArray.push(counter+1)
-    setCounterArray(newArray);
+    dispatch(increment())
   }
 
   const decreaseValue = () => {
-    if(counter === 0) {
-      setShowError(true)
-      return;
-    }
-    setCounter(counter-1);
-    const newArray = [...counterArray];
-    if(!newArray.includes(counter-1)) newArray.push(counter-1)
-    setCounterArray(newArray);
+    dispatch(decrement())
   }
 
+  const onChangeValue = (event) => {
+    if(!Number(event.target.value)) return;
+    setInput(event.target.value)
+  }
+
+  const increaseValueByAmount = () => {
+    dispatch(incrementByAmount(Number(input)))
+  }
 
   return (
+    <>
     <div>
       <div style={{
         display: 'flex'
@@ -44,13 +41,12 @@ function App() {
           +
         </button>
       </div>
-      {showError && (
-        <div className={'test'}>
-          Value can not be lower than zero
-        </div>
-      )}
-      {counterArray.map(el => <div>{el} is the number</div>)}
     </div>
+    <div>
+      <input value={input} onChange={onChangeValue}></input>
+      <button onClick={increaseValueByAmount}>Add amount</button>
+    </div>
+    </>
   );
 }
 
